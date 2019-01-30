@@ -1,6 +1,16 @@
 // DEMO BOT CONTROL
 // UKRMT KATS SMALL ROBOT CONTROL SOFTWARE
 // UNIVERSITY OF KENTUCKY 2019
+//   _  __    _  _____ ____    ____   ___ _____
+//  | |/ /   / \|_   _/ ___|  | __ ) / _ \_   _|
+//  | ' /   / _ \ | | \___ \  |  _ \| | | || |
+//  | . \  / ___ \| |  ___) | | |_) | |_| || |
+//  |_|\_\/_/   \_\_| |____/  |____/ \___/ |_|
+
+
+// THE ROBOT USES 4 OF THIS POLOLU MOTOR DRIVER
+// https://www.pololu.com/product/1451
+
 
 #define DEBUG true
 
