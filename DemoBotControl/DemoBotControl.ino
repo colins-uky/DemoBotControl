@@ -11,7 +11,7 @@
 // THE ROBOT USES 4 OF THIS POLOLU MOTOR DRIVER
 // https://www.pololu.com/product/1451
 
-
+#include <string.h>
 #define DEBUG true
 
 // MOTOR CONTROL PINS
@@ -49,46 +49,7 @@ enum {
 } drive_state;
 
 
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-void setup() {
-  Serial.begin(115200);
-  delay(100);
-
-  setupMotorControlPins();
-
-  driveDirection(DS_STOP);
-  driveSpeed(MOTORS_ALL, 0);
-}
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-void loop() {
-  // PROCESS SERIAL MESSAGES AND DRIVE MOTORS ACCORDINGLY
-
-  if (Serial.available() > 0) {
-                // read the incoming byte:
-                  
-    if (tmp=='\n')
-    {
-                //FORMAT: 'M' proceeded by four four character substrings consisting of 0 or 1 for direction and a three digit pwm value
-                //Example: 'M1255025511270127' would correspond to:
-                //Motor 1 fwd at full speed, Motor 2 rvs at full speed, Motor 3 fwd at half speed, Motor 4 rvs at half speed
-                data_in = Serial.readString();
-                drive(MOTOR1,toInt(data_in.substring(1,2),toInt(data_in.substring(2,5)));
-                drive(MOTOR2,toInt(data_in.substring(6,7),toInt(data_in.substring(6,9)));
-                drive(MOTOR3,toInt(data_in.substring(10,11),toInt(data_in.substring(10,13)));
-                drive(MOTOR4,toInt(data_in.substring(14,15),toInt(data_in.substring(14,17)));
-                data_in = "";
-    }
-    else data_in += tmp;
-  }
-
-}
-                      
 void drive(  int m, int d, int spd ){
-
   if( spd>255)  spd = 255;
   if( spd<0)    spd = 0;
   
@@ -151,7 +112,9 @@ void drive(  int m, int d, int spd ){
           digitalWrite(MOTOR4_INA, LOW );
           digitalWrite(MOTOR4_INB, HIGH );
           analogWrite(MOTOR4_PWM, spd);
-       } 
+          Serial.print(spd);
+       }
+        
   
      // DRIVE REVERSE
       else if( d==0 )
@@ -162,13 +125,8 @@ void drive(  int m, int d, int spd ){
       }
     break;
       
-  // ERROR STATE BAD DIRECTION PROVIDED
-  else {
-    if(DEBUG) {
-      Serial.print("bad drive state in call to setDirection(");
-      Serial.print(d);
-      Serial.println(");");
-    }
+ 
+    
   }
 }
   
@@ -256,47 +214,7 @@ void driveSpeed(int m, int spd)
 }
 
 
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-// INPUT: DRIVE MODE FROM drive_state ENUM
-// CONFIGURES THE DIRECTION PINS OF THE MOTOR CONTROLLERS
-// BASED ON DRIVE STATE CHOICE
-void driveDirection( int d ){
 
-  // ALL STOP CONDITION
-  if( d==DS_STOP ){
-    motorsOff();
-  } 
-
-  // DRIVE FORWARD
-  else if( d==DS_FWD ){
-    forward();
-  } 
-  
-  // DRIVE REVERSE
-  else if( d==DS_REV ){
-    reverse();
-  }
-  
-  // TURN RUGHT
-  else if( d==DS_RT ){
-    right();
-  } 
-
-  // TURN LEFT
-  else if( d==DS_LT ){
-    left();
-  }
-  
-  // ERROR STATE BAD DIRECTION PROVIDED
-  else {
-    if(DEBUG) {
-      Serial.print("bad drive state in call to setDirection(");
-      Serial.print(d);
-      Serial.println(");");
-    }
-  }
-}
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -392,4 +310,42 @@ void setupMotorControlPins()
   pinMode(MOTOR4_INB, OUTPUT);
   pinMode(MOTOR4_PWM, OUTPUT);
 }
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+void setup() {
+  Serial.begin(115200);
+  delay(100);
 
+ // setupMotorControlPins();
+
+  driveDirection(DS_STOP);
+  driveSpeed(MOTORS_ALL, 0);
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+void loop() {
+  // PROCESS SERIAL MESSAGES AND DRIVE MOTORS ACCORDINGLY
+
+  while(Serial.available() > 0) {
+                // read the incoming byte:
+    char tmp=Serial.read();  
+
+    if (tmp=='\n')
+    {
+                //FORMAT: 'M' proceeded by four four character substrings consisting of 0 or 1 for direction and a three digit pwm value
+                //Example: 'M1255025511270127' would correspond to:
+                //Motor 1 fwd at full speed, Motor 2 rvs at full speed, Motor 3 fwd at half speed, Motor 4 rvs at half speed
+                drive(MOTOR1,data_in.substring(1,2).toInt(),data_in.substring(2,5).toInt());
+                drive(MOTOR2,data_in.substring(5,6).toInt(),data_in.substring(6,9).toInt());
+                drive(MOTOR3,data_in.substring(9,10).toInt(),data_in.substring(10,13).toInt());
+                drive(MOTOR4,data_in.substring(13,14).toInt(),data_in.substring(14,17).toInt());
+                Serial.println(data_in);
+                data_in = "";
+                break;
+    }
+    else data_in += tmp;
+  }
+
+}
+                      
