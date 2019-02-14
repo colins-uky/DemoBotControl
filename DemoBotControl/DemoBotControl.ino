@@ -27,6 +27,7 @@
 #define MOTOR4_INA    19
 #define MOTOR4_INB    18
 #define MOTOR4_PWM    20
+String data_in;
 
 enum {
   MOTOR1,
@@ -66,7 +67,10 @@ void setup() {
 void loop() {
   // PROCESS SERIAL MESSAGES AND DRIVE MOTORS ACCORDINGLY
 
-  
+  if (Serial.available() > 0) {
+                // read the incoming byte:
+                data_in = Serial.readString();
+        }
 
 }
 
