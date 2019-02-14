@@ -28,6 +28,7 @@
 #define MOTOR4_INB    18
 #define MOTOR4_PWM    20
 String data_in;
+char tmp;
 
 enum {
   MOTOR1,
@@ -54,7 +55,6 @@ enum {
 void setup() {
   Serial.begin(115200);
   delay(100);
-  
 
   setupMotorControlPins();
 
@@ -69,9 +69,144 @@ void loop() {
 
   if (Serial.available() > 0) {
                 // read the incoming byte:
+                  
+    if (tmp=='\n')
+    {
+                //FORMAT: 'M' proceeded by four four character substrings consisting of 0 or 1 for direction and a three digit pwm value
+                //Example: 'M1255025511270127' would correspond to:
+                //Motor 1 fwd at full speed, Motor 2 rvs at full speed, Motor 3 fwd at half speed, Motor 4 rvs at half speed
                 data_in = Serial.readString();
-        }
+                drive(MOTOR1,toInt(data_in.substring(1,2),toInt(data_in.substring(2,5)));
+                drive(MOTOR2,toInt(data_in.substring(6,7),toInt(data_in.substring(6,9)));
+                drive(MOTOR3,toInt(data_in.substring(10,11),toInt(data_in.substring(10,13)));
+                drive(MOTOR4,toInt(data_in.substring(14,15),toInt(data_in.substring(14,17)));
+                data_in = "";
+    }
+    else data_in += tmp;
+  }
 
+}
+                      
+void drive(  int m, int d, int spd ){
+
+  if( spd>255)  spd = 255;
+  if( spd<0)    spd = 0;
+  
+  switch (m)
+  {
+    case MOTOR1:
+       if( d==1 )
+       {
+          digitalWrite(MOTOR1_INA, LOW );
+          digitalWrite(MOTOR1_INB, HIGH );
+          analogWrite(MOTOR1_PWM, spd);
+       } 
+  
+     // DRIVE REVERSE
+      else if( d==0 )
+      {
+          digitalWrite(MOTOR1_INA, HIGH );
+          digitalWrite(MOTOR1_INB, LOW );
+          analogWrite(MOTOR1_PWM, spd);
+      }
+    break;
+
+    case MOTOR2:
+       if( d==1 )
+       {
+          digitalWrite(MOTOR2_INA, LOW );
+          digitalWrite(MOTOR2_INB, HIGH );
+          analogWrite(MOTOR2_PWM, spd);
+       } 
+  
+     // DRIVE REVERSE
+      else if( d==0 )
+      {
+          digitalWrite(MOTOR2_INA, HIGH );
+          digitalWrite(MOTOR2_INB, LOW );
+          analogWrite(MOTOR2_PWM, spd);
+      }
+    break;
+
+    case MOTOR3:
+       if( d==1 )
+       {
+          digitalWrite(MOTOR3_INA, LOW );
+          digitalWrite(MOTOR3_INB, HIGH );
+          analogWrite(MOTOR3_PWM, spd);
+       } 
+  
+     // DRIVE REVERSE
+      else if( d==0 )
+      {
+          digitalWrite(MOTOR3_INA, HIGH );
+          digitalWrite(MOTOR3_INB, LOW );
+          analogWrite(MOTOR3_PWM, spd);
+      }
+    break;
+      
+    case MOTOR4:
+       if( d==1 )
+       {
+          digitalWrite(MOTOR4_INA, LOW );
+          digitalWrite(MOTOR4_INB, HIGH );
+          analogWrite(MOTOR4_PWM, spd);
+       } 
+  
+     // DRIVE REVERSE
+      else if( d==0 )
+      {
+          digitalWrite(MOTOR4_INA, HIGH );
+          digitalWrite(MOTOR4_INB, LOW );
+          analogWrite(MOTOR4_PWM, spd);
+      }
+    break;
+      
+  // ERROR STATE BAD DIRECTION PROVIDED
+  else {
+    if(DEBUG) {
+      Serial.print("bad drive state in call to setDirection(");
+      Serial.print(d);
+      Serial.println(");");
+    }
+  }
+}
+  
+void driveDirection( int d ){
+
+  // ALL STOP CONDITION
+  if( d==DS_STOP ){
+    motorsOff();
+  } 
+
+  // DRIVE FORWARD
+  else if( d==DS_FWD ){
+    forward();
+  } 
+  
+  // DRIVE REVERSE
+  else if( d==DS_REV ){
+    reverse();
+  }
+  
+  // TURN RUGHT
+  else if( d==DS_RT ){
+    right();
+  } 
+
+  // TURN LEFT
+  else if( d==DS_LT ){
+    left();
+  }
+  
+  // ERROR STATE BAD DIRECTION PROVIDED
+  else {
+    if(DEBUG) {
+      Serial.print("bad drive state in call to setDirection(");
+      Serial.print(d);
+      Serial.println(");");
+    }
+  }
 }
 
 void driveSpeed(int m, int spd)
