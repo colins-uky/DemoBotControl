@@ -49,166 +49,170 @@ enum {
 } drive_state;
 
 
-void drive(  int m, int d, int spd ){
-  if( spd>255)  spd = 255;
-  if( spd<0)    spd = 0;
-  
+void drive(  int m, int d, int spd ) {
+  if ( spd > 255)  spd = 255;
+  if ( spd < 0)    spd = 0;
+
+
+  s.print("driving motor "); Serial1.print(m); Serial1.print(" at speed ");
+  Serial1.print(spd); Serial1.print(" in direction "); Serial1.println(d);
+
   switch (m)
   {
     case MOTOR1:
-       if( d==1 )
-       {
-          digitalWrite(MOTOR1_INA, LOW );
-          digitalWrite(MOTOR1_INB, HIGH );
-          analogWrite(MOTOR1_PWM, spd);
-       } 
-  
-     // DRIVE REVERSE
-      else if( d==0 )
+      if ( d == 1 )
       {
-          digitalWrite(MOTOR1_INA, HIGH );
-          digitalWrite(MOTOR1_INB, LOW );
-          analogWrite(MOTOR1_PWM, spd);
+        Serial1.println("In and driving");
+        digitalWrite(MOTOR1_INA, LOW );
+        digitalWrite(MOTOR1_INB, HIGH );
+        analogWrite(MOTOR1_PWM, spd);
       }
-    break;
+
+      // DRIVE REVERSE
+      else if ( d == 0 )
+      {
+        digitalWrite(MOTOR1_INA, HIGH );
+        digitalWrite(MOTOR1_INB, LOW );
+        analogWrite(MOTOR1_PWM, spd);
+      }
+      break;
 
     case MOTOR2:
-       if( d==1 )
-       {
-          digitalWrite(MOTOR2_INA, LOW );
-          digitalWrite(MOTOR2_INB, HIGH );
-          analogWrite(MOTOR2_PWM, spd);
-       } 
-  
-     // DRIVE REVERSE
-      else if( d==0 )
+      if ( d == 1 )
       {
-          digitalWrite(MOTOR2_INA, HIGH );
-          digitalWrite(MOTOR2_INB, LOW );
-          analogWrite(MOTOR2_PWM, spd);
+        digitalWrite(MOTOR2_INA, LOW );
+        digitalWrite(MOTOR2_INB, HIGH );
+        analogWrite(MOTOR2_PWM, spd);
       }
-    break;
+
+      // DRIVE REVERSE
+      else if ( d == 0 )
+      {
+        digitalWrite(MOTOR2_INA, HIGH );
+        digitalWrite(MOTOR2_INB, LOW );
+        analogWrite(MOTOR2_PWM, spd);
+      }
+      break;
 
     case MOTOR3:
-       if( d==1 )
-       {
-          digitalWrite(MOTOR3_INA, LOW );
-          digitalWrite(MOTOR3_INB, HIGH );
-          analogWrite(MOTOR3_PWM, spd);
-       } 
-  
-     // DRIVE REVERSE
-      else if( d==0 )
+      if ( d == 1 )
       {
-          digitalWrite(MOTOR3_INA, HIGH );
-          digitalWrite(MOTOR3_INB, LOW );
-          analogWrite(MOTOR3_PWM, spd);
+        digitalWrite(MOTOR3_INA, LOW );
+        digitalWrite(MOTOR3_INB, HIGH );
+        analogWrite(MOTOR3_PWM, spd);
       }
-    break;
-      
+
+      // DRIVE REVERSE
+      else if ( d == 0 )
+      {
+        digitalWrite(MOTOR3_INA, HIGH );
+        digitalWrite(MOTOR3_INB, LOW );
+        analogWrite(MOTOR3_PWM, spd);
+      }
+      break;
+
     case MOTOR4:
-       if( d==1 )
-       {
-          digitalWrite(MOTOR4_INA, LOW );
-          digitalWrite(MOTOR4_INB, HIGH );
-          analogWrite(MOTOR4_PWM, spd);
-          Serial.print(spd);
-       }
-        
-  
-     // DRIVE REVERSE
-      else if( d==0 )
+      if ( d == 1 )
       {
-          digitalWrite(MOTOR4_INA, HIGH );
-          digitalWrite(MOTOR4_INB, LOW );
-          analogWrite(MOTOR4_PWM, spd);
+        digitalWrite(MOTOR4_INA, LOW );
+        digitalWrite(MOTOR4_INB, HIGH );
+        analogWrite(MOTOR4_PWM, spd);
       }
-    break;
-      
- 
-    
+
+
+      // DRIVE REVERSE
+      else if ( d == 0 )
+      {
+        digitalWrite(MOTOR4_INA, HIGH );
+        digitalWrite(MOTOR4_INB, LOW );
+        analogWrite(MOTOR4_PWM, spd);
+      }
+      break;
+
+
+
   }
 }
-  
-void driveDirection( int d ){
+
+void driveDirection( int d ) {
 
   // ALL STOP CONDITION
-  if( d==DS_STOP ){
+  if ( d == DS_STOP ) {
     motorsOff();
-  } 
+  }
 
   // DRIVE FORWARD
-  else if( d==DS_FWD ){
+  else if ( d == DS_FWD ) {
     forward();
-  } 
-  
+  }
+
   // DRIVE REVERSE
-  else if( d==DS_REV ){
+  else if ( d == DS_REV ) {
     reverse();
   }
-  
+
   // TURN RUGHT
-  else if( d==DS_RT ){
+  else if ( d == DS_RT ) {
     right();
-  } 
+  }
 
   // TURN LEFT
-  else if( d==DS_LT ){
+  else if ( d == DS_LT ) {
     left();
   }
-  
+
   // ERROR STATE BAD DIRECTION PROVIDED
   else {
-    if(DEBUG) {
-      Serial.print("bad drive state in call to setDirection(");
-      Serial.print(d);
-      Serial.println(");");
+    if (DEBUG) {
+      Serial1.print("bad drive state in call to setDirection(");
+      Serial1.print(d);
+      Serial1.println(");");
     }
   }
 }
 
 void driveSpeed(int m, int spd)
 {
-  if( spd>255)  spd = 255;
-  if( spd<0)    spd = 0;
-  
+  if ( spd > 255)  spd = 255;
+  if ( spd < 0)    spd = 0;
+
   switch (m)
   {
     case MOTOR1:
       analogWrite(MOTOR1_PWM, spd);
-    break;
+      break;
 
     case MOTOR2:
       analogWrite(MOTOR2_PWM, spd);
-    break;
+      break;
 
     case MOTOR3:
       analogWrite(MOTOR3_PWM, spd);
-    break;
+      break;
 
     case MOTOR4:
       analogWrite(MOTOR4_PWM, spd);
-    break;
+      break;
 
     case MOTORS_LEFT:
       analogWrite(MOTOR3_PWM, spd);
       analogWrite(MOTOR4_PWM, spd);
-    break;
+      break;
 
     case MOTORS_RIGHT:
       analogWrite(MOTOR1_PWM, spd);
       analogWrite(MOTOR2_PWM, spd);
-    break;
+      break;
 
     case MOTORS_ALL:
       analogWrite(MOTOR1_PWM, spd);
       analogWrite(MOTOR2_PWM, spd);
       analogWrite(MOTOR3_PWM, spd);
       analogWrite(MOTOR4_PWM, spd);
-    break;
+      break;
 
     default:
-      if(DEBUG) Serial.println("Error in driveSpeed()");
+      if (DEBUG) Serial1.println("Error in driveSpeed()");
       break;
   }
 }
@@ -313,10 +317,10 @@ void setupMotorControlPins()
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 void setup() {
-  Serial.begin(115200);
+  Serial1.begin(115200);
   delay(100);
 
- // setupMotorControlPins();
+  setupMotorControlPins();
 
   driveDirection(DS_STOP);
   driveSpeed(MOTORS_ALL, 0);
@@ -325,27 +329,34 @@ void setup() {
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 void loop() {
-  // PROCESS SERIAL MESSAGES AND DRIVE MOTORS ACCORDINGLY
+  // PROCESS Serial1 MESSAGES AND DRIVE MOTORS ACCORDINGLY
 
-  while(Serial.available() > 0) {
-                // read the incoming byte:
-    char tmp=Serial.read();  
+  while (Serial1.available() > 0) {
+    // read the incoming byte:
+    char tmp = Serial1.read();
 
-    if (tmp=='\n')
+    if (tmp == '\n')
     {
-                //FORMAT: 'M' proceeded by four four character substrings consisting of 0 or 1 for direction and a three digit pwm value
-                //Example: 'M1255025511270127' would correspond to:
-                //Motor 1 fwd at full speed, Motor 2 rvs at full speed, Motor 3 fwd at half speed, Motor 4 rvs at half speed
-                drive(MOTOR1,data_in.substring(1,2).toInt(),data_in.substring(2,5).toInt());
-                drive(MOTOR2,data_in.substring(5,6).toInt(),data_in.substring(6,9).toInt());
-                drive(MOTOR3,data_in.substring(9,10).toInt(),data_in.substring(10,13).toInt());
-                drive(MOTOR4,data_in.substring(13,14).toInt(),data_in.substring(14,17).toInt());
-                Serial.println(data_in);
-                data_in = "";
-                break;
+      if ( data_in == "stop" || data_in == "STOP" ) {
+        driveDirection(DS_STOP);
+        driveSpeed(MOTORS_ALL, 0);
+      } else {
+
+        //FORMAT: 'M' proceeded by four four character substrings consisting of 0 or 1 for direction and a three digit pwm value
+        //Example: 'M1255025511270127' would correspond to:
+        //Motor 1 fwd at full speed, Motor 2 rvs at full speed, Motor 3 fwd at half speed, Motor 4 rvs at half speed
+        drive(MOTOR1, data_in.substring(1, 2).toInt(), data_in.substring(2, 5).toInt());
+        drive(MOTOR2, data_in.substring(5, 6).toInt(), data_in.substring(6, 9).toInt());
+        drive(MOTOR3, data_in.substring(9, 10).toInt(), data_in.substring(10, 13).toInt());
+        drive(MOTOR4, data_in.substring(13, 14).toInt(), data_in.substring(14, 17).toInt());
+
+      }
+      Serial1.println(data_in);
+      data_in = "";
+      break;
     }
     else data_in += tmp;
   }
 
 }
-                      
+
