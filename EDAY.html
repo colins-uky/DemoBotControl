@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <style>
 
 h1 {
@@ -27,6 +27,8 @@ text-align:center;
   opacity: 0.7;
   -webkit-transition: .2s;
   transition: opacity .2s;
+-ms-touch-action: none;
+touch-action: none;
 }
 
 .slider:hover {
@@ -108,11 +110,12 @@ text-align:center;
 </div>
 
 
-<button class="button" type="button" onclick="alert('Connected')">Connect</button>
-<button class="button button2" type="button" onclick="alert('Disconnected')">Disconnect</button>
+<button class="button" type="button" onclick="connect()">Connect</button>
+<button class="button button2" type="button" onclick="disconnect()">Disconnect</button>
 
 <script>
-var slider1 = document.getElementById("PWM1");
+  var ws = null;
+  var slider1 = document.getElementById("PWM1");
 var output1 = document.getElementById("demo1");
 var slider2 = document.getElementById("PWM2");
 var output2 = document.getElementById("demo2");
@@ -129,6 +132,10 @@ output4.innerHTML = slider4.value;
 
 slider1.oninput = function() {
   output1.innerHTML = this.value;
+  console.log('motor 1',this.value);
+  if(ws){
+  ws.send("M 1 1 ");ws.send(this.value);
+  }
 }
 
 slider2.oninput = function() {
@@ -143,7 +150,42 @@ slider4.oninput = function() {
   output4.innerHTML = this.value;
 }
 
+  function connect() {
+  console.log("connecting");
+  if ("WebSocket" in window) {
+  var socketURL = location.origin.replace(/^http/, 'ws') + ':1234';
+  
+               // Let us open a web socket
+               ws = new WebSocket(socketURL);
+				
+               ws.onopen = function() {
+                  
+                  // Web Socket is connected, send data using send()
+                  ws.send("publish motors");
+                  alert("Message is sent...");
+               };
+				
+               ws.onmessage = function (evt) { 
+                  var received_msg = evt.data;
+                  console.log(received_msg);
+               };
+				
+               ws.onclose = function() { 
+                  
+                  // websocket is closed.
+                  alert("Connection is closed..."); 
+               };
+            } else {
+              
+               // The browser doesn't support WebSocket
+               alert("WebSocket NOT supported by your Browser!");
+            }
+  }
 
+
+  function disconnect() {
+  console.log("disconnect");
+  }
 </script>
 
 </body>
