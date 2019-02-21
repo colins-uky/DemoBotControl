@@ -83,7 +83,7 @@ touch-action: none;
 
 <div align="center">
 	<h2>Motor 1</h2>
-		<div class="""slidecontainer">
+		<div class="slidecontainer">
 			<input type="range" min="-255" max="255" value="0" class="slider" id="PWM1">
 			<p>Value: <span id="demo1"></span></p>
 		</div>
@@ -91,21 +91,21 @@ touch-action: none;
 
 	<h2>Motor 2</h2>
 
-	<div class="""slidecontainer">
+	<div class="slidecontainer">
 		<input type="range" min="-255" max="255" value="0" class="slider" id="PWM2">
 		<p>Value: <span id="demo2"></span></p>
 	</div>
 
 	<h2>Motor 3</h2>
 
-	<div class="""slidecontainer">
+	<div class="slidecontainer">
 		<input type="range" min="-255" max="255" value="0" class="slider" id="PWM3">
 		<p>Value: <span id="demo3"></span></p>
 	</div>
 
 	<h2>Motor 4</h2>
 
-	<div class="""slidecontainer">
+	<div class="slidecontainer">
 		<input type="range" min="-255" max="255" value="0" class="slider" id="PWM4">
 		<p>Value: <span id="demo4"></span></p>
 	</div>
@@ -113,7 +113,7 @@ touch-action: none;
 
 <button class="button" type="button" onclick="connect()">Test Socket</button>
 <button class="button button2" type="button" onclick="closeSocket()">Disconnect</button>
-<button class="button button3" type="button" onclick="stopMotors()">Stop Motors</button>
+<button class="button button3" type="button" id="stopButton">Stop Motors</button>
 
 <script>
 var ws = null;
@@ -125,6 +125,8 @@ var slider3 = document.getElementById("PWM3");
 var output3 = document.getElementById("demo3");
 var slider4 = document.getElementById("PWM4");
 var output4 = document.getElementById("demo4");
+var stopBut = document.getElementById("stopButton");
+
 
 /* var url = "wss://echo.websocket.org/"; /*this is an echo server, replace with real server later */
 /* var ws = new WebSocket(url); */
@@ -136,36 +138,69 @@ output4.innerHTML = slider4.value;
 
 /* ws.onmessage = function(evt) { onMessage(evt) }; */
 
+// wait at least 200 ms between websocket sends per motor
+var sendDelay = 1000;
+var sendCount = 0;
+// store last websocket send time per motor
+var lastSend = Array(4).fill(0);
 
-slider1.oninput = function() {
+function sliderChange(i, e) {
+	if( sendCount++ % 10 != 0 && i != -1){
+		return;
+	}
+	
+	if( i==-1 ) i=0;
+	
+	var mVals = Array(4);
+	mVals[0] = output1.innerHTML;
+	mVals[1] = output2.innerHTML;
+	mVals[2] = output3.innerHTML;
+	mVals[3] = output4.innerHTML;
+	
+	var sendString = "M";
+	for( var j=0;j<4;j++ ){
+		sendString += ((mVals[j] < 0) ? "0" : "1") + String(Math.abs(Number(mVals[j]))).padStart(3,'0');
+	}
+	sendString +='\n';
+	
+	console.log(sendString);
+	
+	if( ws ){
+		ws.send(sendString);
+	}
+}
+
+slider1.oninput = function(e) {
   output1.innerHTML = this.value;
-  
-  console.log('motor 1',this.value);
-  if(ws){
-  ws.send("M 1 1 ");ws.send(this.value);
-  }
+  sliderChange(1,e);
 }
 
-slider2.oninput = function() {
-  output2.innerHTML = this.value;
-  
+slider2.oninput = function(e) {
+  output2.innerHTML = this.value;  
+  sliderChange(2,e);
 }
 
-slider3.oninput = function() {
+slider3.oninput = function(e) {
   output3.innerHTML = this.value;
-  
+  sliderChange(3,e);
 }
 
-slider4.oninput = function() {
+slider4.oninput = function(e) {
   output4.innerHTML = this.value;
-  
+  sliderChange(4,e);
 }
 
-function stopMotors() {
+stopBut.onclick = function(e) {
+	slider1.value = 0;
+	slider2.value = 0;
+	slider3.value = 0;
+	slider4.value = 0;
 	output1.innerHTML = 0;
 	output2.innerHTML = 0;
 	output3.innerHTML = 0;
 	output4.innerHTML = 0;
+	
+	sliderChange(-1,e);
 }
 
 function onMessage(evt)
