@@ -54,7 +54,7 @@ void drive(  int m, int d, int spd ) {
   if ( spd < 0)    spd = 0;
 
 
-  s.print("driving motor "); Serial1.print(m); Serial1.print(" at speed ");
+  Serial1.print("driving motor "); Serial1.print(m); Serial1.print(" at speed ");
   Serial1.print(spd); Serial1.print(" in direction "); Serial1.println(d);
 
   switch (m)
@@ -314,22 +314,69 @@ void setupMotorControlPins()
   pinMode(MOTOR4_INB, OUTPUT);
   pinMode(MOTOR4_PWM, OUTPUT);
 }
+
+void waitForStartupMessage() {
+  bool gotit = false;
+  String message = F("KATSBOT2019");
+  int index = 0;
+  unsigned long startTime = millis();
+  unsigned long timeout = 60000;
+  
+  while( !gotit ){
+    if( millis() - startTime > timeout ){
+      return;
+    }
+    if( Serial1.available() ){
+      if( Serial.peek()==message[index] ){
+        index++;
+      } else {
+        index =0;
+      }
+      if( index==11 ){
+        gotit = true;
+      }
+    }
+  }
+}
+
+int batterySampleInterval=500;
+unsigned long lastBatterySample=0;
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 void setup() {
+  Serial.begin(115200);
   Serial1.begin(115200);
   delay(100);
 
   setupMotorControlPins();
 
+  pinMode(A0, INPUT);
+
   driveDirection(DS_STOP);
   driveSpeed(MOTORS_ALL, 0);
+
+
+  waitForStartupMessage();
 }
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 void loop() {
   // PROCESS Serial1 MESSAGES AND DRIVE MOTORS ACCORDINGLY
+//
+//  if( millis()-lastBatterySample > batterySampleInterval ){
+//    float value = 0.0;
+//    unsigned long sum = 0;
+//    int i=0;
+//    for( i=0; i<10; i++) {
+//      sum += analogRead(A0);
+//      delay(5);
+//    }
+//    value = 3.3*((float)sum/10.0/1023.0)/(10.0/59.0);
+//    Serial.println(value, 2);
+//    lastBatterySample=millis();
+//  }
 
   while (Serial1.available() > 0) {
     // read the incoming byte:
@@ -340,6 +387,18 @@ void loop() {
       if ( data_in == "stop" || data_in == "STOP" ) {
         driveDirection(DS_STOP);
         driveSpeed(MOTORS_ALL, 0);
+      } 
+      else if(data_in == "battery" || data_in == "BATTERY") {
+        float value = 0.0;
+        unsigned long sum = 0;
+        int i=0;
+        for( i=0; i<10; i++) {
+          sum += analogRead(A0);
+          delay(5);
+        }
+        sum/=10;
+        value = 3.3*((float)sum/1023.0)/(10.0/59.0);
+        Serial1.println(value, 2);
       } else {
 
         //FORMAT: 'M' proceeded by four four character substrings consisting of 0 or 1 for direction and a three digit pwm value
