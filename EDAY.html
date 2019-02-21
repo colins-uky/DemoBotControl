@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+h1 {
+text-align:center;
+padding-bottom: 2cm;
+}
+
+h2 {
+text-align:center;
+}
+
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+.button2 {background-color: #f44336;} /* Red */
+
+</style>
+</head>
+<body>
+
+<img src="KATS.png" alt="KATS Logo" style="float:left;width:100px;height:100px;">
+<img src="NASAKY.png" alt="NASA KY Logo" style="float:right;height:100px;">
+
+
+<h1>Kentucky AstroRobotics Terrain Systems (KATS)</h1>
+
+<p></p>
+
+
+<h2>Motor 1</h2>
+
+<div class="""slidecontainer">
+  <input type="range" min="1" max="255" value="50" class="slider" id="PWM1">
+  <p>Value: <span id="demo1"></span></p>
+</div>
+
+<h2>Motor 2</h2>
+
+<div class="""slidecontainer">
+  <input type="range" min="1" max="255" value="50" class="slider" id="PWM2">
+  <p>Value: <span id="demo2"></span></p>
+</div>
+
+<h2>Motor 3</h2>
+
+<div class="""slidecontainer">
+  <input type="range" min="1" max="255" value="50" class="slider" id="PWM3">
+  <p>Value: <span id="demo3"></span></p>
+</div>
+
+<h2>Motor 4</h2>
+
+<div class="""slidecontainer">
+  <input type="range" min="1" max="255" value="50" class="slider" id="PWM4">
+  <p>Value: <span id="demo4"></span></p>
+</div>
+
+
+<button class="button" type="button" onclick="alert('Connected')">Connect</button>
+<button class="button button2" type="button" onclick="alert('Disconnected')">Disconnect</button>
+
+<script>
+var slider1 = document.getElementById("PWM1");
+var output1 = document.getElementById("demo1");
+var slider2 = document.getElementById("PWM2");
+var output2 = document.getElementById("demo2");
+var slider3 = document.getElementById("PWM3");
+var output3 = document.getElementById("demo3");
+var slider4 = document.getElementById("PWM4");
+var output4 = document.getElementById("demo4");
+
+output1.innerHTML = slider1.value;
+output2.innerHTML = slider2.value;
+output3.innerHTML = slider3.value;
+output4.innerHTML = slider4.value;
+
+
+slider1.oninput = function() {
+  output1.innerHTML = this.value;
+}
+
+slider2.oninput = function() {
+  output2.innerHTML = this.value;
+}
+
+slider3.oninput = function() {
+  output3.innerHTML = this.value;
+}
+
+slider4.oninput = function() {
+  output4.innerHTML = this.value;
+}
+
+
+</script>
+
+</body>
+</html>
