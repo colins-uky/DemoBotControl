@@ -116,7 +116,6 @@ touch-action: none;
 <button class="button button3" type="button" id="stopButton">Stop Motors</button>
 
 <script>
-var ws = null;
 var slider1 = document.getElementById("PWM1");
 var output1 = document.getElementById("demo1");
 var slider2 = document.getElementById("PWM2");
@@ -128,6 +127,8 @@ var output4 = document.getElementById("demo4");
 var stopBut = document.getElementById("stopButton");
 
 
+var ws = null;
+/* var url = "ws://localhost:1234"; */
 /* var url = "wss://echo.websocket.org/"; /*this is an echo server, replace with real server later */
 /* var ws = new WebSocket(url); */
 
@@ -215,12 +216,12 @@ function onMessage(evt)
   
                // Let us open a web socket
                ws = new WebSocket(socketURL);
+				//ws = new WebSocket(url);	
 				
                ws.onopen = function() {
-                  
+				console.log("opened websocket to ",url);
                   // Web Socket is connected, send data using send()
                   ws.send("publish motors");
-                  alert("Message is sent...");
                };
 				
                ws.onmessage = function (evt) { 
@@ -231,7 +232,7 @@ function onMessage(evt)
                ws.onclose = function() { 
                   
                   // websocket is closed.
-                  alert("Connection is closed..."); 
+                 console.log("websocket connection closed!!");
                };
             } else {
               
@@ -243,7 +244,7 @@ function onMessage(evt)
 
   function disconnect() {
     ws.close();
-    console.log("disconnect");
+    console.log("user inititated disconnection");
   }
 </script>
 
