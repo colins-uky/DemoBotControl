@@ -19,7 +19,7 @@ text-align:center;
 
 .slider {
   -webkit-appearance: none;
-  width: 100%;
+  width: 95%;
   height: 15px;
   border-radius: 5px;
   background: #d3d3d3;
@@ -65,6 +65,7 @@ text-align:center;
 }
 
 .button2 {background-color: #f44336;} /* Red */
+.button3 {background-color: #f4bf42;} /* Yellow */
 
 </style>
 </head>
@@ -78,38 +79,38 @@ text-align:center;
 
 <p></p>
 
+<div align="center">
+	<h2>Motor 1</h2>
+		<div class="""slidecontainer">
+			<input type="range" min="-255" max="255" value="0" class="slider" id="PWM1">
+			<p>Value: <span id="demo1"></span></p>
+		</div>
 
-<h2>Motor 1</h2>
 
-<div class="""slidecontainer">
-  <input type="range" min="-255" max="255" value="50" class="slider" id="PWM1">
-  <p>Value: <span id="demo1"></span></p>
+	<h2>Motor 2</h2>
+
+	<div class="""slidecontainer">
+		<input type="range" min="-255" max="255" value="0" class="slider" id="PWM2">
+		<p>Value: <span id="demo2"></span></p>
+	</div>
+
+	<h2>Motor 3</h2>
+
+	<div class="""slidecontainer">
+		<input type="range" min="-255" max="255" value="0" class="slider" id="PWM3">
+		<p>Value: <span id="demo3"></span></p>
+	</div>
+
+	<h2>Motor 4</h2>
+
+	<div class="""slidecontainer">
+		<input type="range" min="-255" max="255" value="0" class="slider" id="PWM4">
+		<p>Value: <span id="demo4"></span></p>
+	</div>
 </div>
-
-<h2>Motor 2</h2>
-
-<div class="""slidecontainer">
-  <input type="range" min="-255" max="255" value="50" class="slider" id="PWM2">
-  <p>Value: <span id="demo2"></span></p>
-</div>
-
-<h2>Motor 3</h2>
-
-<div class="""slidecontainer">
-  <input type="range" min="-255" max="255" value="50" class="slider" id="PWM3">
-  <p>Value: <span id="demo3"></span></p>
-</div>
-
-<h2>Motor 4</h2>
-
-<div class="""slidecontainer">
-  <input type="range" min="-255" max="255" value="50" class="slider" id="PWM4">
-  <p>Value: <span id="demo4"></span></p>
-</div>
-
-
-<button class="button" type="button" onclick="alert('Connected')">Connect</button>
-<button class="button button2" type="button" onclick="alert('Disconnected')">Disconnect</button>
+<button class="button" type="button" onclick="openSocket()">Test Socket</button>
+<button class="button button2" type="button" onclick="closeSocket()">Disconnect</button>
+<button class="button button3" type="button" onclick="stopMotors()">Stop Motors</button>
 
 <script>
 var slider1 = document.getElementById("PWM1");
@@ -121,26 +122,62 @@ var output3 = document.getElementById("demo3");
 var slider4 = document.getElementById("PWM4");
 var output4 = document.getElementById("demo4");
 
+var url = "wss://echo.websocket.org/"; /*this is an echo server, replace with real server later */
+var ws = new WebSocket(url);
+
 output1.innerHTML = slider1.value;
 output2.innerHTML = slider2.value;
 output3.innerHTML = slider3.value;
 output4.innerHTML = slider4.value;
 
+ws.onmessage = function(evt) { onMessage(evt) };
+
 
 slider1.oninput = function() {
   output1.innerHTML = this.value;
+  ws.send('m1' + this.value.toString());
 }
 
 slider2.oninput = function() {
   output2.innerHTML = this.value;
+  ws.send('m2' + this.value.toString());
 }
 
 slider3.oninput = function() {
   output3.innerHTML = this.value;
+  ws.send('m3' + this.value.toString());
 }
 
 slider4.oninput = function() {
   output4.innerHTML = this.value;
+  ws.send('m4' + this.value.toString());
+}
+
+function stopMotors() {
+	output1.innerHTML = 0;
+	output2.innerHTML = 0;
+	output3.innerHTML = 0;
+	output4.innerHTML = 0;
+	ws.send('m1' + 0);
+	ws.send('m2' + 0);
+	ws.send('m3' + 0);
+	ws.send('m4' + 0);
+}
+
+function openSocket() {
+	if("WebSocket" in window){
+		alert("WebSocket Supported!");
+	}else{
+		alert("WebSocket NOT supported by your Browser!");
+	}
+}
+function closeSocket() {
+	ws.close();
+}
+
+function onMessage(evt)
+{
+	alert(evt.data);
 }
 
 
