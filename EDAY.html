@@ -114,7 +114,7 @@ touch-action: none;
 
 <button class="button" type="button" onclick="connect()">Connect</button>
 <button class="button button2" type="button" onclick="disconnect()">Disconnect</button>
-<button class="button button3" type="button" onclick="stopMotors()">Stop Motors</button>
+<button class="button button3" type="button" id="stopButton" onclick="stopMotors()">Stop Motors</button>
 
 
 <script>
@@ -221,7 +221,7 @@ function onMessage(evt)
 				//ws = new WebSocket(url);	
 				
                ws.onopen = function() {
-				console.log("opened websocket to ",url);
+				console.log("opened websocket");
                   // Web Socket is connected, send data using send()
                   ws.send("publish motors");
                };
