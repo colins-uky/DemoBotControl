@@ -13,20 +13,24 @@
 
 #include <string.h>
 #define DEBUG true
+#define DEBUG_SERIAL Serial
+#define PI_SERIAL Serial1
+
+#define LED 13
 
 // MOTOR CONTROL PINS
 #define MOTOR1_INA    23
-#define MOTOR1_INB    21
-#define MOTOR1_PWM    22
-#define MOTOR2_INA    2
-#define MOTOR2_INB    5
-#define MOTOR2_PWM    3
-#define MOTOR3_INA    17
-#define MOTOR3_INB    15
-#define MOTOR3_PWM    16
-#define MOTOR4_INA    19
-#define MOTOR4_INB    18
-#define MOTOR4_PWM    20
+#define MOTOR1_INB    22
+#define MOTOR1_PWM    3
+#define MOTOR2_INA    21
+#define MOTOR2_INB    20
+#define MOTOR2_PWM    4
+#define MOTOR3_INA    19
+#define MOTOR3_INB    18
+#define MOTOR3_PWM    6
+#define MOTOR4_INA    17
+#define MOTOR4_INB    16
+#define MOTOR4_PWM    9
 String data_in;
 char tmp;
 
@@ -54,15 +58,15 @@ void drive(  int m, int d, int spd ) {
   if ( spd < 0)    spd = 0;
 
 
-  Serial1.print("driving motor "); Serial1.print(m); Serial1.print(" at speed ");
-  Serial1.print(spd); Serial1.print(" in direction "); Serial1.println(d);
+  DEBUG_SERIAL.print("driving motor "); DEBUG_SERIAL.print(m); DEBUG_SERIAL.print(" at speed ");
+  DEBUG_SERIAL.print(spd); DEBUG_SERIAL.print(" in direction "); DEBUG_SERIAL.println(d);
 
   switch (m)
   {
     case MOTOR1:
       if ( d == 1 )
       {
-        Serial1.println("In and driving");
+        DEBUG_SERIAL.println("In and driving");
         digitalWrite(MOTOR1_INA, LOW );
         digitalWrite(MOTOR1_INB, HIGH );
         analogWrite(MOTOR1_PWM, spd);
@@ -136,6 +140,8 @@ void drive(  int m, int d, int spd ) {
 
 void driveDirection( int d ) {
 
+  DEBUG_SERIAL.println("driving motor");
+
   // ALL STOP CONDITION
   if ( d == DS_STOP ) {
     motorsOff();
@@ -164,9 +170,9 @@ void driveDirection( int d ) {
   // ERROR STATE BAD DIRECTION PROVIDED
   else {
     if (DEBUG) {
-      Serial1.print("bad drive state in call to setDirection(");
-      Serial1.print(d);
-      Serial1.println(");");
+      DEBUG_SERIAL.print("bad drive state in call to setDirection(");
+      DEBUG_SERIAL.print(d);
+      DEBUG_SERIAL.println(");");
     }
   }
 }
@@ -212,7 +218,7 @@ void driveSpeed(int m, int spd)
       break;
 
     default:
-      if (DEBUG) Serial1.println("Error in driveSpeed()");
+      if (DEBUG) DEBUG_SERIAL.println("Error in driveSpeed()");
       break;
   }
 }
@@ -315,29 +321,29 @@ void setupMotorControlPins()
   pinMode(MOTOR4_PWM, OUTPUT);
 }
 
-void waitForStartupMessage() {
-  bool gotit = false;
-  String message = F("KATSBOT2019");
-  int index = 0;
-  unsigned long startTime = millis();
-  unsigned long timeout = 60000;
-  
-  while( !gotit ){
-    if( millis() - startTime > timeout ){
-      return;
-    }
-    if( Serial1.available() ){
-      if( Serial.peek()==message[index] ){
-        index++;
-      } else {
-        index =0;
-      }
-      if( index==11 ){
-        gotit = true;
-      }
-    }
-  }
-}
+//void waitForStartupMessage() {
+//  bool gotit = false;
+//  String message = F("KATSBOT2019");
+//  int index = 0;
+//  unsigned long startTime = millis();
+//  unsigned long timeout = 60000;
+//  
+//  while( !gotit ){
+//    if( millis() - startTime > timeout ){
+//      return;
+//    }
+//    if( PI_SERIAL.available() ){
+//      if( PI_SERIAL.peek()==message[index] ){
+//        index++;
+//      } else {
+//        index =0;
+//      }
+//      if( index==11 ){
+//        gotit = true;
+//      }
+//    }
+//  }
+//}
 
 int batterySampleInterval=500;
 unsigned long lastBatterySample=0;
@@ -345,9 +351,9 @@ unsigned long lastBatterySample=0;
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 void setup() {
-  Serial.begin(115200);
-  Serial1.begin(115200);
-  delay(100);
+  PI_SERIAL.begin(115200);
+  DEBUG_SERIAL.begin(115200);
+  delay(1000);
 
   setupMotorControlPins();
 
@@ -356,8 +362,14 @@ void setup() {
   driveDirection(DS_STOP);
   driveSpeed(MOTORS_ALL, 0);
 
+  DEBUG_SERIAL.print("Starting");
 
-  waitForStartupMessage();
+  //waitForStartupMessage();
+
+  pinMode(LED, OUTPUT);
+  digitalWrite(LED, HIGH);
+  delay(1000);
+  digitalWrite(LED, LOW);
 }
 
 //------------------------------------------------------------------------------
@@ -378,9 +390,9 @@ void loop() {
 //    lastBatterySample=millis();
 //  }
 
-  while (Serial1.available() > 0) {
+  while (PI_SERIAL.available() > 0) {
     // read the incoming byte:
-    char tmp = Serial1.read();
+    char tmp = PI_SERIAL.read();
 
     if (tmp == '\n')
     {
@@ -398,7 +410,7 @@ void loop() {
         }
         sum/=10;
         value = 3.3*((float)sum/1023.0)/(10.0/59.0);
-        Serial1.println(value, 2);
+        PI_SERIAL.println(value, 2);
       } else {
 
         //FORMAT: 'M' proceeded by four four character substrings consisting of 0 or 1 for direction and a three digit pwm value
@@ -410,7 +422,7 @@ void loop() {
         drive(MOTOR4, data_in.substring(13, 14).toInt(), data_in.substring(14, 17).toInt());
 
       }
-      Serial1.println(data_in);
+      PI_SERIAL.println(data_in);
       data_in = "";
       break;
     }
@@ -418,4 +430,3 @@ void loop() {
   }
 
 }
-
