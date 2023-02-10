@@ -10,6 +10,9 @@ function val()
 {
 	select = document.getElementById("motorSelect");
 	motor = (select.options[select.selectedIndex].value);
+
+	imgPath = "../Images/car-icon-motor" + motor + ".png";
+	document.getElementById("car-icon").src = imgPath;
 }
 
 /* TODO add websocket communication stuff for each of the buttons*/
@@ -110,10 +113,14 @@ function connect() {
 				//ws = new WebSocket(url);	
 				
                ws.onopen = function() {
-				console.log("opened websocket");
-                  // Web Socket is connected, send data using send()
-                  ws.send("publish motors");
-		  document.getElementById("cbutton").innerText = "Connected";
+					console.log("opened websocket");
+                  	// Web Socket is connected, send data using send()
+                  	ws.send("publish motors");
+					button = document.getElementById("cbutton");
+		  			button.innerText = "Disconnect";
+					button.onclick = "disconnect()";
+					button.style.backgroundColor = "#f44336"; // same colors in hex and rgba (red)
+					button.style.boxShadow = "1px 5px 20px rgba(244,67,54,0.75)";
                };
 				
                ws.onmessage = function (evt) { 
@@ -136,5 +143,18 @@ function connect() {
 function disconnect() {
 	ws.close();
 	console.log("user inititated disconnection");
-	document.getElementById("cbutton").innerText = "Connect";
+
+	button = document.getElementById("cbutton");
+	button.innerText = "Connect";
+	button.onclick = "connect()";
+	button.style.backgroundColor = "#4CAF50"; // same colors in hex and rgba (green)
+	button.style.boxShadow = "1px 5px 20px rgba(76,175,80,0.75)";
+}
+
+function styleButton(element) {
+	element.style.boxShadow = "inset 0 0 40px rgba(44, 155, 186, 0.75)";
+}
+
+function removeStyleButton(element) {
+	element.style.boxShadow = "none";
 }
