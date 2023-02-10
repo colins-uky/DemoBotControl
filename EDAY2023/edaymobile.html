@@ -43,11 +43,11 @@
 	<button id="cbutton" class="button" type="button" onclick="connect()">Connect</button>
 
 
-	<button id="forward" class="controller-button" type="button" onmousedown="styleButton(this);" onmouseup="removeStyleButton(this);" ontouchstart="forward();updateMsg();" ontouchend="stop();updateMsg();" >
+	<button id="forward" class="controller-button" type="button" onmousedown="forward();updateMsg();styleButton(this);" onmouseup="stop();updateMsg();removeStyleButton(this);" ontouchstart="forward();updateMsg();" ontouchend="stop();updateMsg();" >
 		<img class="arrow" src="../Images/up-arrow.svg" alt="Forward">
 	</button>
 
-	<button id="reverse" class="controller-button" type="button" onmousedown="styleButton(this);" onmouseup="removeStyleButton(this);" ontouchstart="reverse();updateMsg();" ontouchend="stop();updateMsg();">
+	<button id="reverse" class="controller-button" type="button" onmousedown="reverse();updateMsg();styleButton(this);" onmouseup="stop();updateMsg();removeStyleButton(this);" ontouchstart="reverse();updateMsg();" ontouchend="stop();updateMsg();">
 		<img class="arrow flip" src="../Images/up-arrow.svg" alt="Reverse">
 	</button>
 	</div>
