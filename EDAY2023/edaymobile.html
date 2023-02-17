@@ -2,19 +2,11 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="edaymobile.css">
 
 
-	<script>
-		// Shorthand for Jquery $(document).ready()
-		$(function() {
-
-
-		});
-	</script>
-
 </head>
+
 <body>
 <div align="center">
 <div id="container">
@@ -44,11 +36,11 @@
 
 
 	<button id="forward" class="controller-button" type="button" onmousedown="forward();updateMsg();styleButton(this);" onmouseup="stop();updateMsg();removeStyleButton(this);" ontouchstart="forward();updateMsg();" ontouchend="stop();updateMsg();" >
-		<img class="arrow" src="../Images/up-arrow.svg" alt="Forward">
+		<img class="arrow no-long-touch" src="../Images/up-arrow.svg" alt="Forward">
 	</button>
 
 	<button id="reverse" class="controller-button" type="button" onmousedown="reverse();updateMsg();styleButton(this);" onmouseup="stop();updateMsg();removeStyleButton(this);" ontouchstart="reverse();updateMsg();" ontouchend="stop();updateMsg();">
-		<img class="arrow flip" src="../Images/up-arrow.svg" alt="Reverse">
+		<img class="arrow flip no-long-touch" src="../Images/up-arrow.svg" alt="Reverse">
 	</button>
 	</div>
 

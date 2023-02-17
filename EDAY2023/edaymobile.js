@@ -44,25 +44,25 @@ function forward() {
 }
 function stop() {
 	if(motor=="1"){
-		m1='2000';
+		m1='0000';
 		m2='0000';
 		m3='0000';
 		m4='0000';
 	}
 	else if(motor=="2"){
-		m2='2000';
+		m2='0000';
 		m1='0000';
 		m3='0000';
 		m4='0000';
 	}
 	else if(motor=="3"){
-		m3='2000';
+		m3='0000';
 		m1='0000';
 		m2='0000';
 		m4='0000';
 	}
 	else if(motor=="4"){
-		m4='2000';
+		m4='0000';
 		m1='0000';
 		m2='0000';
 		m3='0000';
@@ -118,7 +118,7 @@ function connect() {
                   	ws.send("publish motors");
 					button = document.getElementById("cbutton");
 		  			button.innerText = "Disconnect";
-					button.onclick = "disconnect()";
+					button.onclick = disconnect;
 					button.style.backgroundColor = "#f44336"; // same colors in hex and rgba (red)
 					button.style.boxShadow = "1px 5px 20px rgba(244,67,54,0.75)";
                };
@@ -146,7 +146,7 @@ function disconnect() {
 
 	button = document.getElementById("cbutton");
 	button.innerText = "Connect";
-	button.onclick = "connect()";
+	button.onclick = connect;
 	button.style.backgroundColor = "#4CAF50"; // same colors in hex and rgba (green)
 	button.style.boxShadow = "1px 5px 20px rgba(76,175,80,0.75)";
 }

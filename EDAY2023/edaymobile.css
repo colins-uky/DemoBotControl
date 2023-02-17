@@ -5,11 +5,10 @@
 }
 
 
-div, p {margin:0px; padding:0px;}
+
 #container{
 	width:100%;
-	height:100%;
-	position:fixed;
+	height: 100%;
 }
 
 #top{
@@ -116,9 +115,6 @@ img#car-icon {
 	filter: invert(72%) sepia(54%) saturate(2853%) hue-rotate(156deg) brightness(85%) contrast(77%);
 }
 
-.controller-button:hover > .arrow {
-	filter: invert(72%) sepia(54%) saturate(2853%) hue-rotate(156deg) brightness(75%) contrast(77%);
-}
 
 .flip {
 	transform: rotate(180deg);
@@ -139,9 +135,19 @@ img#car-icon {
 	cursor: pointer;
 	opacity: 0.85;	
 	border-radius: 10px;
+	-webkit-touch-callout: none;
 	-webkit-user-select: none;
    	-khtml-user-select: none;
-    	-moz-user-select: none;
-    	-ms-user-select: none;
-    	user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.no-long-touch {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+   	-khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
