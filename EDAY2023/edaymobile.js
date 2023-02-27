@@ -18,28 +18,28 @@ function val()
 /* TODO add websocket communication stuff for each of the buttons*/
 function forward() {
 	if(motor=="1"){
-		m1='1100';
+		m1='1200';
 		m2='9000';
 		m3='9000';
 		m4='9000';
 	}
 	else if(motor=="2"){
 		m1='9000';
-		m2='1100';
+		m2='1200';
 		m3='9000';
 		m4='9000';
 	}
 	else if(motor=="3"){
 		m1='9000';
 		m2='9000';
-		m3='0100';
+		m3='0200';
 		m4='9000';
 	}
 	else if(motor=="4"){
 		m1='9000';
 		m2='9000';
 		m3='9000';
-		m4='0100';
+		m4='0200';
 	}
 }
 function stop() {
@@ -71,25 +71,25 @@ function stop() {
 }
 function reverse(){
 	if(motor=="1"){
-		m1='0100';
+		m1='0200';
 		m2='9000';
 		m3='9000';
 		m4='9000';
 	}
 	else if(motor=="2"){
-		m2='0100';
+		m2='0200';
 		m1='9000';
 		m3='9000';
 		m4='9000';
 	}
 	else if(motor=="3"){
-		m3='1100';
+		m3='1200';
 		m1='9000';
 		m2='9000';
 		m4='9000';
 	}
 	else if(motor=="4"){
-		m4='1100';
+		m4='1200';
 		m1='9000';
 		m2='9000';
 		m3='9000';
